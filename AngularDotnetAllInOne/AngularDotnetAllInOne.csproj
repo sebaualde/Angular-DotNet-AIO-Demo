@@ -1,0 +1,64 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.14" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="9.0.14" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="ClientApp\" />
+    <Folder Include="wwwroot\spa\" />
+  </ItemGroup>
+
+  <!--Primero evitamos que ciertos archivos se incluyan en el deploy final.-->
+  <ItemGroup>
+    <Content Update="wwwroot\images\**\*">
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <!--También excluimos el código fuente de Angular:-->
+  <ItemGroup>
+    <Content Update="ClientApp\**\*">
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <!--Ahora creamos un target de MSBuild que se ejecutará antes del proceso de publicación.-->
+  <Target Name="BuildAngular" BeforeTargets="Publish">
+    <!--<Exec WorkingDirectory="ClientApp" Command="npm install" />-->
+
+    <Exec WorkingDirectory="ClientApp" Command="npm run build -- --configuration production" />
+
+    <Exec WorkingDirectory="ClientApp/dist/ClientApp/browser"
+        Command="npx brotli-cli compress --glob &quot;**/*.{js,css,html,json,svg,txt}&quot;" />
+
+  </Target>
+
+  <!--Una vez compilado el frontend, copiamos los archivos generados al backend.-->
+  <Target Name="CopyAngularBuild" AfterTargets="BuildAngular">
+
+    <ItemGroup>
+      <AngularDist Include="ClientApp/dist/ClientApp/browser/**" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(AngularDist)" DestinationFolder="wwwroot/spa/%(RecursiveDir)" SkipUnchangedFiles="true" />
+
+  </Target>
+
+  <!--Finalmente indicamos a MSBuild que estos archivos copiados deben incluirse en el proceso de publicación.-->
+  <ItemGroup>
+    <Content Update="wwwroot/spa/**">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+
+</Project>

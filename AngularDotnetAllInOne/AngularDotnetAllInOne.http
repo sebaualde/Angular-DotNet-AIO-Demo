@@ -1,0 +1,6 @@
+@AngularDotnetAllInOne_HostAddress = https://localhost:7181
+
+GET {{AngularDotnetAllInOne_HostAddress}}/api/weatherforecast/
+Accept: application/json
+
+###

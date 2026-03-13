@@ -1,0 +1,71 @@
+<main>
+  <div class="page-bg">
+
+    <section class="hero">
+      <div class="hero-logo-wrap">
+        <img [src]="'sursoft.png'" alt="Sursoft Logo" class="hero-logo" />
+      </div>
+      <div class="hero-text">
+        <h1 class="hero-title">
+          Angular <span class="hero-slash">/</span> .NET
+        </h1>
+        <p class="hero-demo-label">All In One Demo</p>
+        <div class="hero-badges">
+          <span class="badge badge-angular">Angular 21</span>
+          <span class="badge badge-dotnet">.NET 9</span>
+          <span class="badge badge-signals">Signals</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="weather-container">
+
+      <header class="card-header">
+        <div class="header-icon">🌤️</div>
+        <div>
+          <h1 class="app-title">Weather Forecast</h1>
+          <p class="app-subtitle">Próximos días · Backend .NET</p>
+        </div>
+        <button class="reload-btn" (click)="loadWeather()" [disabled]="isLoading()">
+          @if(isLoading()){
+          <span class="spinner"></span>
+          } @else {
+          <span class="btn-icon">↺</span> Recargar
+          }
+        </button>
+      </header>
+
+      @if(message()){
+      <div class="error-banner">
+        <span class="error-icon">⚠️</span>
+        {{ message() }}
+      </div>
+      }
+
+      @if(isLoading() && !weatherForecast()){
+      <div class="skeleton-list">
+        @for(_ of [1,2,3,4,5]; track $index){
+        <div class="skeleton-row"></div>
+        }
+      </div>
+      }
+
+      @if(weatherForecast() && !message()){
+      <div class="cards-grid">
+        @for(w of weatherForecast(); track $index){
+        <div class="forecast-card">
+          <span class="card-date">{{ w.date | date:'EEE, d MMM' }}</span>
+          <div class="temp-row">
+            <span class="temp-c">{{ w.temperatureC }}°C</span>
+            <span class="temp-divider">|</span>
+            <span class="temp-f">{{ w.temperatureF }}°F</span>
+          </div>
+          <span class="summary-badge">{{ w.summary }}</span>
+        </div>
+        }
+      </div>
+      }
+
+    </section>
+  </div>
+</main>

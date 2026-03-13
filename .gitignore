@@ -416,3 +416,19 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# Angular / Node
+ClientApp/node_modules
+ClientApp/dist
+ClientApp/.angular
+ClientApp/.cache
+ClientApp/.vite
+
+# Angular build generado en publish
+wwwroot/spa/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+/AngularDotnetAllInOne/wwwroot/spa
