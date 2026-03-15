@@ -32,6 +32,8 @@ public static class MiddlewaresConfigs
 
         app.MapControllers();
 
+        app.MapFallbackToFile("/spa/index.html"); //Para que Angular maneje las rutas del frontend (SPA)
+
         /*
          Esta configuración permite que:
             - en desarrollo, Angular corra de forma independiente con "ng serve" en http://localhost:4200,
